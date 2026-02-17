@@ -31,12 +31,12 @@ for project in projects:
             prs_url = f'https://api.github.com/repos/{repo_name}/pulls'
             issues_url = f'https://api.github.com/repos/{repo_name}/issues'
 
-            commits_response = requests.get(commits_url)
-            releases_response = requests.get(releases_url)
-            contributors_response = requests.get(contributors_url)
-            forks_response = requests.get(forks_url)
-            prs_response = requests.get(prs_url)
-            issues_response = requests.get(issues_url)
+            commits_response = requests.get(commits_url, headers=headers)
+            releases_response = requests.get(releases_url, headers=headers)
+            contributors_response = requests.get(contributors_url, headers=headers)
+            forks_response = requests.get(forks_url, headers=headers)
+            prs_response = requests.get(prs_url, headers=headers)
+            issues_response = requests.get(issues_url, headers=headers)
 
             last_commit = commits_response.json()[0]['commit']['committer']['date'] if commits_response.status_code == 200 else None
             date_released = releases_response.json()[0]['published_at'] if releases_response.status_code == 200 and releases_response.json() else None

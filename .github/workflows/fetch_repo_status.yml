@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 0 * * *' # You can adjust the schedule as needed. This one runs daily at midnight.
 
+permissions:
+  contents: write
+
 jobs:
   fetch-status:
     runs-on: ubuntu-latest

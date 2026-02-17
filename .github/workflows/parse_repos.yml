@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight
 
+permissions:
+  contents: write
+
 jobs:
   parse_repos:
     runs-on: ubuntu-latest

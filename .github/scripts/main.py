@@ -11,17 +11,18 @@ SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 def get_repos():
     all_repos = []
     page = 1
-    max_pages = 20
+    max_pages = 100  # Safety limit: 100 pages * 100 per page = 10,000 repos max
 
     headers = {"Authorization": f"token {os.environ['GITHUB_TOKEN']}"}
 
+    # Fetch all pages until API returns empty response or safety limit reached
     while page <= max_pages:
         url = f"{GITHUB_API_URL}/orgs/{ORG_NAME}/repos?per_page=100&page={page}"
         response = requests.get(url, headers=headers)
         response.raise_for_status()
 
         repos = response.json()
-        if not repos:
+        if not repos:  # No more repositories to fetch
             break
 
         all_repos.extend(repos)

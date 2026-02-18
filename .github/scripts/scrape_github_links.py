@@ -8,8 +8,9 @@ def check_url_exists(url):
     try:
         response = requests.head(url, timeout=10, allow_redirects=True)
         return response.status_code != 404
-    except requests.RequestException:
+    except requests.RequestException as e:
         # If we can't check the URL, assume it's valid to avoid false positives
+        print(f"Warning: Could not validate URL {url}: {type(e).__name__}")
         return True
 
 def extract_github_links(url, project_name):

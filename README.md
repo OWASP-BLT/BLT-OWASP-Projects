@@ -40,7 +40,7 @@ This project provides an automated system for monitoring OWASP project repositor
     │   ├── parse_repos.yml       # Fetches OWASP project repositories
     │   ├── fetch_repo_status.yml # Updates detailed repository status
     │   ├── sweep_repos.yml       # Sweeps repositories for additional data
-    │   └── scrape_gihub_links.yml# Scrapes GitHub links from project pages
+    │   └── scrape_github_links.yml# Scrapes GitHub links from project pages
     └── scripts/
         ├── main.py               # Main repository parsing script
         ├── fetch_repo_status.py  # Fetches detailed repository information
@@ -125,7 +125,7 @@ This project uses GitHub Actions to automatically update data:
 - **Purpose**: Additional repository data collection
 - **Output**: Updates project metadata
 
-### 4. Scrape GitHub Links (`scrape_gihub_links.yml`)
+### 4. Scrape GitHub Links (`scrape_github_links.yml`)
 - **Trigger**: Scheduled or manual dispatch
 - **Purpose**: Extracts GitHub repository links from OWASP project pages
 - **Output**: Updates `project_repos_links.json`

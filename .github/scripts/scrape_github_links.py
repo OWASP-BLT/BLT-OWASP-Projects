@@ -3,6 +3,16 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+def check_url_exists(url):
+    """Check if a URL returns a 404 status code."""
+    try:
+        response = requests.head(url, timeout=10, allow_redirects=True)
+        return response.status_code != 404
+    except requests.RequestException as e:
+        # If we can't check the URL, assume it's valid to avoid false positives
+        print(f"Warning: Could not validate URL {url}: {type(e).__name__}")
+        return True
+
 def extract_github_links(url, project_name):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -12,7 +22,12 @@ def extract_github_links(url, project_name):
     for link in links:
         match = re.match(r'https://github\.com/[^/]+/[^/#]+', link['href'].lower())
         if match and project_name.lower() not in link['href'].lower():
-            github_links.add(match.group(0))
+            github_url = match.group(0)
+            # Check if the URL returns 404 before adding
+            if check_url_exists(github_url):
+                github_links.add(github_url)
+            else:
+                print(f"Skipping 404 URL: {github_url}")
     
     return list(github_links)
 

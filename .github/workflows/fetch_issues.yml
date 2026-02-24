@@ -28,6 +28,7 @@ jobs:
       - name: Fetch issues and send Slack notifications
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_NEW_ISSUES_WEBHOOK: ${{ secrets.SLACK_NEW_ISSUES_WEBHOOK }}
         run: python .github/scripts/fetch_issues.py
 

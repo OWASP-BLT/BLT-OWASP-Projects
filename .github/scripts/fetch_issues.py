@@ -8,7 +8,7 @@ ORG_NAME = "OWASP"
 OUTPUT_FILE = "issues.json"
 KNOWN_IDS_FILE = "known_issue_ids.json"
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_NEW_ISSUES_WEBHOOK")
-ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
+ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN") or os.environ.get("GITHUB_TOKEN")
 
 headers = {"Accept": "application/vnd.github.v3+json"}
 if ACCESS_TOKEN:

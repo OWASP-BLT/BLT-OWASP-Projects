@@ -4,7 +4,6 @@ import requests
 
 GITHUB_API_URL = "https://api.github.com"
 ORG_NAME = "owasp"
-REPO_PREFIX = "www-project"
 OUTPUT_FILE = "www_project_repos.json"
 SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 
@@ -31,18 +30,16 @@ def get_repos():
     return all_repos
 
 def filter_and_format_repos(repos):
-    filtered_repos = []
-
-    for repo in repos:
-        if repo["name"].startswith(REPO_PREFIX):
-            filtered_repos.append(repo)
-
-    return filtered_repos
+    # Return all repos, no filtering by prefix
+    return repos
 
 def send_slack_alert(new_repos):
     message = "New repositories detected:\n"
     for repo in new_repos:
-        message += f"- {repo['full_name']} (https://github.com/{repo['full_name']})\n"
+        # Get description or use empty string if None
+        description = repo.get('description') or 'No description'
+        # Use Slack markdown link format: <URL|display text>
+        message += f"- <https://github.com/{repo['full_name']}|{repo['full_name']}> - {description}\n"
 
     payload = {"text": message}
     response = requests.post(SLACK_WEBHOOK_URL, json=payload)
@@ -51,7 +48,7 @@ def send_slack_alert(new_repos):
 def main():
     print('parsing repos')
     repos = get_repos()
-    www_project_repos = filter_and_format_repos(repos)
+    all_repos = filter_and_format_repos(repos)
 
     try:
         with open(OUTPUT_FILE, "r") as f:
@@ -59,12 +56,12 @@ def main():
     except FileNotFoundError:
         old_repos = []
 
-    new_repos = [repo for repo in www_project_repos if repo['id'] not in [old_repo['id'] for old_repo in old_repos]]
+    new_repos = [repo for repo in all_repos if repo['id'] not in [old_repo['id'] for old_repo in old_repos]]
     if new_repos:
         send_slack_alert(new_repos)
 
     with open(OUTPUT_FILE, "w") as f:
-        json.dump(www_project_repos, f, indent=2)
+        json.dump(all_repos, f, indent=2)
 
 if __name__ == "__main__":
     main()
